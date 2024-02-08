@@ -14,6 +14,11 @@ int	double_quote(const char *ptr)
 	return (1);
 }
 
+int my_isalnum(int c)
+{
+    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+}
+
 void	built_in_echo(const char *message)
 {
 	const char	*start;
@@ -27,10 +32,11 @@ void	built_in_echo(const char *message)
 	{
 		if (!simple_quote (ptr))
 		{
-			++ptr;
+			//++ptr;
+			start = ++ptr;
 			while (*ptr != 39)
 			{
-				putchar(*ptr);
+				my_putchar(*ptr);
 				++ptr;
 			}
 			++ptr;
@@ -42,10 +48,10 @@ void	built_in_echo(const char *message)
 		if (*ptr == '$')
 		{
 			start = ++ptr;
-			while (isalnum(*ptr) || *ptr == '_')
+			while (my_isalnum(*ptr) || *ptr == '_')
 				++ptr;
 			var_len = ptr - start;
-			var_name = (char *)calloc(var_len + 1, sizeof(char));
+			var_name = (char *)my_calloc(var_len + 1, sizeof(char));
 			my_strncpy(var_name, start, var_len);
 			var_name[var_len] = '\0';
 			var_value = get_env_var(var_name);

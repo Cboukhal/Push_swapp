@@ -12,6 +12,8 @@ SRCS		=	main.c			\
 				built.c			\
 				echo.c			\
 				str.c			\
+				strn.c			\
+				my.c			\
 
 OBJS		=	$(SRCS:.c=.o)
 

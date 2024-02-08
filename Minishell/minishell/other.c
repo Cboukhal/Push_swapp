@@ -41,13 +41,13 @@ void	add_tail(char *var)
 
 	ptr = first;
 	new_node = NULL;
-	new_node = (t_env *)calloc(sizeof(t_env), 1);
+	new_node = (t_env *)my_calloc(sizeof(t_env), 1);
 	if (new_node == NULL)
 	{
 		printf("Alloc failure\n");
 		return ;
 	}
-	new_node->var =my_strdup(var);
+	new_node->var = my_strdup(var);
 	new_node->next = NULL;
 	if (ptr == NULL)
 		first = new_node;
@@ -103,26 +103,30 @@ void	dup_env(char **envp)
 {
 	char	*var_lst[] = {"PATH", "HOME", "OLDPWD", "PWD", "SHLVL", NULL};
 	ssize_t	nb_elem = 5; // nombre d'element dasn var_lst
+	int		i;
 
 	// boucle sur l'env et stock les variables dans la liste
-	for (int i = 0; envp[i]; i++) 
+	i = 0;
+	while (envp[i])
 	{
 		add_tail(my_strdup(envp[i]));
-
 		// On verifie que l'on a les variables d'environment minimal
 		if (!my_strncmp(envp[i], "PATH", 4)) var_lst[0] = NULL;
 		else if (!my_strncmp(envp[i], "HOME", 4)) var_lst[1] = NULL;
 		else if (!my_strncmp(envp[i], "OLDPWD", 6)) var_lst[2] = NULL;
 		else if (!my_strncmp(envp[i], "PWD", 3)) var_lst[3] = NULL;
 		else if (!my_strncmp(envp[i], "SHLVL", 5)) var_lst[4] = NULL;
+		i++;
 	}
 
 	// On verifie qu l'on a les varaibles PATH, HOME, OLD_PWD et SHLVL
 	// sinon on l'ajoute
-	for (int i = 0; i < nb_elem; i++) 
+	i = 0;
+	while (i < nb_elem)
 	{
 		if (var_lst[i] != NULL)
 			add_env_var(var_lst[i]);
+		i++;
 	}
 }
 
@@ -140,7 +144,7 @@ char	**lst_to_array(void)
 		idx++;
 		tmp = tmp->next;
 	}
-	array = (char **)calloc(sizeof(char *), idx + 1);
+	array = (char **)my_calloc(sizeof(char *), idx + 1);
 	if (array == NULL)
 	{
 		perror("calloc");

@@ -70,7 +70,7 @@ bool	get_absolute_path(char **cmd, char **env)
 		idx = 0;
 		while (path_split[idx])
 		{
-			bin = (char *)calloc(sizeof(char),(my_strlen(path_split[idx]) + 1 + my_strlen(cmd[0]) + 1));
+			bin = (char *)my_calloc(sizeof (char), (my_strlen(path_split[idx]) + 1 + my_strlen(cmd[0]) + 1));
 			if (bin == NULL)
 				break ;
 			my_strcat(bin, path_split[idx]);
@@ -94,19 +94,45 @@ bool	get_absolute_path(char **cmd, char **env)
 	return (bin == NULL ? false : true);
 }
 
+struct passwd *my_getpwuid(uid_t uid)
+{
+    struct passwd *pwd;
+
+    pwd = (struct passwd *)malloc(sizeof(struct passwd));
+    if (pwd == NULL) 
+    {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+    pwd->pw_name = "user";          // Nom de l'utilisateur
+    pwd->pw_uid = uid;              // UID de l'utilisateur
+    pwd->pw_dir = "/home/user";     // Répertoire principal de l'utilisateur
+    pwd->pw_shell = "/bin/bash";    // Shell par défaut de l'utilisateur
+
+    return pwd;
+}
+
+uid_t my_getuid()
+{
+    // Simuler un UID arbitraire
+    uid_t uid = 1000; // par exemple
+    return uid;
+}
+
 void	add_env_var(char *var)
 {
 	struct passwd	*pw;
 	char			*alloc;
 
-	pw = getpwuid(getuid());
+	pw = my_getpwuid(my_getuid());
 	alloc = NULL;
 	if (!my_strcmp(var, "HOME"))
 	{
-		alloc = (char *)calloc(sizeof(char), my_strlen(pw->pw_dir) + my_strlen("HOME=") + 1);
+		alloc = (char *)my_calloc(sizeof(char), my_strlen(pw->pw_dir) + my_strlen("HOME=") + 1);
 		if (alloc == NULL)
 		{
-			fprintf(stderr, "Cannot add HOME\n");
+			//fprintf(stderr, "Cannot add HOME\n");
+			printf("Cannot add HOME\n");
 			return ;
 		}
 		my_strcat(alloc, "HOME=");
@@ -117,7 +143,8 @@ void	add_env_var(char *var)
 		alloc = my_strdup("PATH=/bin:/usr/bin");
 		if (alloc == NULL)
 		{
-			fprintf(stderr, "Cannot add PATH\n");
+			//fprintf(stderr, "Cannot add PATH\n");
+			printf("Cannot add PATH\n");
 			return ;
 		}
 	}
@@ -126,7 +153,8 @@ void	add_env_var(char *var)
 		alloc = my_strdup("OLDPWD=");
 		if (alloc == NULL)
 		{
-			fprintf(stderr, "Cannot add OLDPWD\n");
+			//fprintf(stderr, "Cannot add OLDPWD\n");
+			printf("Cannot add OLDPWD\n");
 			return ;
 		}
 	}
@@ -135,7 +163,8 @@ void	add_env_var(char *var)
 		alloc = built_in_pwd();
 		if (alloc == NULL)
 		{
-			fprintf(stderr, "Cannot add PWD\n");
+			//fprintf(stderr, "Cannot add PWD\n");
+			printf("Cannot add PWD\n");
 			return ;
 		}
 	}
@@ -144,7 +173,8 @@ void	add_env_var(char *var)
 		alloc = my_strdup("SHLVL=1");
 		if (alloc == NULL)
 		{
-			fprintf(stderr, "Cannot add OLDPWD\n");
+			//fprintf(stderr, "Cannot add OLDPWD\n");
+			printf("Cannot add OLDPWD\n");
 			return ;
 		}
 	}
@@ -186,4 +216,3 @@ char	**split(char *raw_cmd, char *limit)
 	cmd[idx] = NULL;
 	return (cmd);
 }
-

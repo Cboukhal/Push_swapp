@@ -51,7 +51,7 @@ char	*built_in_pwd(void)
 	char	*cwd;
 
 	cwd = NULL;
-	cwd = (char *)calloc(sizeof(char), PATH_MAX + my_strlen("PWD=") + 1);
+	cwd = (char *)my_calloc(sizeof(char), PATH_MAX + my_strlen("PWD=") + 1);
 	if (cwd == NULL)
 		return (NULL);
 	my_strcat(cwd, "PWD=");
