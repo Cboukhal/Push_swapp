@@ -27,6 +27,11 @@ void	built_in_echo(const char *message)
 	char		*var_name;
 	size_t		var_len;
 
+	if (message == NULL)
+	{
+		printf("\n");
+        return;
+	}
 	ptr = message;
 	while (*ptr != '\0')
 	{
@@ -43,8 +48,6 @@ void	built_in_echo(const char *message)
 		}
 		if (!double_quote(ptr))
 			++ptr;
-		if (!double_quote(ptr))
-			built_in_echo(ptr);
 		if (*ptr == '$')
 		{
 			start = ++ptr;
@@ -52,6 +55,11 @@ void	built_in_echo(const char *message)
 				++ptr;
 			var_len = ptr - start;
 			var_name = (char *)my_calloc(var_len + 1, sizeof(char));
+			if (var_name == NULL)
+			{
+				perror("Allocation error");
+				return;
+			}
 			my_strncpy(var_name, start, var_len);
 			var_name[var_len] = '\0';
 			var_value = get_env_var(var_name);

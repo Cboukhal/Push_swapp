@@ -70,12 +70,17 @@ void	echo(char **built)
 		no_newline = true;
 		i++;
 	}
-	while (built[i])
+	if (built[1] == NULL)
+			printf("test");
+	else
 	{
+		while (built[i])
+		{
 		built_in_echo(built[i]);
 		if (built[i + 1] != NULL)
 			printf(" ");
 		i++;
+		}
 	}
 	if (!no_newline)
 		putchar('\n');
@@ -91,6 +96,8 @@ void	exec_built_in(char **built_in)
 		built_in_env();
 	else if (!my_strcmp(built_in[0], "exit"))
 		built_in_exit();
+	else if (!my_strcmp(built_in[0], "echo") && ((built_in[1] == NULL)))
+		printf("\n");
 	else if (!my_strcmp(built_in[0], "echo"))
 		echo(built_in);
 	else if (!my_strcmp(built_in[0], "unset"))
